@@ -15,7 +15,7 @@ public:
   Sphere(double radius, Position pos, const char *texture_path);
   double getRadius();
   Position getPosition();
-
+  void draw();
   ~Sphere();
 
 private:

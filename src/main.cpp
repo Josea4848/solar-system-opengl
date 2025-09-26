@@ -19,15 +19,14 @@ void init(void) {
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  GLfloat mat_shininess[] = {100.0};
+  GLfloat mat_shininess[] = {200.0};
 
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
   for (Sphere planet : planets) {
     Position pos = planet.getPosition();
 
     glPushMatrix();
-    glTranslatef(pos.x, pos.y, pos.z);
-    glutSolidSphere(planet.getRadius(), 100, 100);
+    planet.draw();
     glPopMatrix();
   }
   glFlush();
@@ -60,7 +59,7 @@ int main(int argc, char **argv) {
   glutCreateWindow(argv[0]);
 
   planets.push_back(Sphere(0.5, {0.0, 0.0, 0.0},
-                           "../assets/models/venus/2k_venus_atmosphere.jpeg"));
+                           "../assets/models/terra/EarthComposited_2k.png"));
 
   init();
   glutDisplayFunc(display);

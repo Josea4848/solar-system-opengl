@@ -1,44 +1,35 @@
+cmake_minimum_required(VERSION 3.10)
 
-cmake_minimum_required(VERSION 3.16)
-project(SistemaSolar)
+# Nome do projeto
+project(solar)
 
-# Define o padrão C++ (C++17 é suficiente)
-set(CMAKE_CXX_STANDARD 17)
+# Definir padrão C++
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Adiciona warnings (opcional, mas recomendado)
-if(MSVC)
-    add_compile_options(/W4 /permissive-)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic -O2)
-endif()
+# Adicionar diretório de includes
+include_directories(include)
 
-# Adiciona o diretório include
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# Lista todos os arquivos fonte
-file(GLOB_RECURSE SOURCES
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/esfera/*.cpp
+# Definir arquivos fonte
+set(SOURCES
+    src/main.cpp
+    src/texture.cpp
+    src/sphere.cpp
 )
 
-# Adiciona o executável
-add_executable(SistemaSolar ${SOURCES})
+# Criar executável
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Procurando OpenGL
-find_package(OpenGL REQUIRED)
-
-# Procurando GLUT
-find_package(GLUT REQUIRED)
-
-# Adiciona as bibliotecas necessárias
-target_link_libraries(SistemaSolar
-    OpenGL::GL
-    GLUT::GLUT
+# Linkar bibliotecas exatamente como no comando g++ original
+target_link_libraries(${PROJECT_NAME} 
+    GL
+    GLU
+    glut
+    m
 )
 
-# Se precisar de assets (como modelos, texturas), você pode copiar para a pasta build
-add_custom_command(TARGET SistemaSolar POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${PROJECT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:SistemaSolar>/assets
-)
+# Copiar assets para o diretório de build
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+
+# Mensagem informativa
+message(STATUS "Projeto: ${PROJECT_NAME} configurado com sucesso")

@@ -4,9 +4,7 @@
 #include <stdlib.h>
 #include <vector>
 
-std::vector<Sphere> planets = {Sphere(0.5, {0.0, 0.0, 0.0}, 0.0, 0.0),
-                               Sphere(0.2, {-2.0, 0.0, 0.0}, 0.0, 0.0)};
-
+std::vector<Sphere> planets;
 void init(void) {
   GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};
 
@@ -60,6 +58,10 @@ int main(int argc, char **argv) {
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow(argv[0]);
+
+  planets.push_back(Sphere(0.5, {0.0, 0.0, 0.0},
+                           "../assets/models/venus/2k_venus_atmosphere.jpeg"));
+
   init();
   glutDisplayFunc(display);
   glutReshapeFunc(reshape);

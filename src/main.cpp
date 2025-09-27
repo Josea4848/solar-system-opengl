@@ -275,7 +275,7 @@ int main(int argc, char **argv) {
 
   // Carregando skybox
   skybox =
-      new Sphere(100.0, {0.0, 0.0, 0.0}, "../assets/models/skybox/skybox.jpeg");
+      new Sphere(200.0, {0.0, 0.0, 0.0}, "../assets/models/skybox/skybox.jpeg");
 
   // Definindo sol
   sun = new Sphere(3.0, {-4.0, 0.0, 0.0}, "../assets/models/sol/2k_sun.jpeg");

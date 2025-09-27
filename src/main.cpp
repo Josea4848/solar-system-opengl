@@ -1,4 +1,5 @@
 #include "../include/sphere.h"
+#include <GL/freeglut_std.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL2/SDL.h>
@@ -14,10 +15,6 @@
 #include <stdlib.h>
 #include <vector>
 
-std::vector<Sphere> planets;
-SDL_Window *window = nullptr;
-SDL_GLContext glContext;
-
 // Câmera
 typedef struct {
   glm::vec3 position;
@@ -31,9 +28,38 @@ typedef struct {
   float sensitivity;
 } Camera;
 
-Camera camera;
+typedef struct Planet {
+  Sphere model;
+  float distance;
+  bool has_ring;
+  GLfloat translation_rate;
+  GLfloat translation_value;
+  int rotate;
+} Planet;
 
-// Função completa para atualizar TODOS os vetores da câmera
+void updatePlanet(Planet &planet) {
+  static GLfloat t = 0.0;
+  double R = planet.distance;
+  double dt = planet.translation_value;
+  t = dt * planet.translation_rate / 10;
+
+  planet.model.setPos({(GLfloat)R * cos(t), (GLfloat)0.0, (GLfloat)R * sin(t)});
+}
+
+void updateRotate(Planet &planet) {
+  planet.rotate += 1.0f;
+  if (planet.rotate >= 360.0f) {
+    planet.rotate -= 360.0f;
+  }
+}
+
+std::vector<Planet> planets;
+Sphere *sun;
+SDL_Window *window = nullptr;
+SDL_GLContext glContext;
+Camera camera;
+bool pause = false;
+
 void updateCameraVectors() {
   // Calcular vetor frontal baseado em yaw e pitch
   glm::vec3 front;
@@ -52,10 +78,9 @@ void updateCameraVectors() {
 
 void init(void) {
   // Luz definida em coordenadas de câmera (position.w = 0 para luz direcional)
-  GLfloat light_position[] = {0.0, 0.0, 1.0,
-                              0.0}; // Direção da luz (em relação à câmera)
-  GLfloat light_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
-  GLfloat light_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
+  GLfloat light_position[] = {0.0, 0.0, 0.0, 1.0};
+  GLfloat light_ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
+  GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glShadeModel(GL_SMOOTH);
@@ -76,6 +101,15 @@ void init(void) {
   updateCameraVectors();
 }
 
+void drawSun() {
+  // Desenha sol
+  GLfloat emission[] = {1.0f, 1.0f, 0.5f, 1.0f};
+  glMaterialfv(GL_FRONT, GL_EMISSION, emission);
+  sun->draw();
+  GLfloat no_emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+  glMaterialfv(GL_FRONT, GL_EMISSION, no_emission);
+}
+
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
@@ -86,16 +120,27 @@ void display(void) {
             center.y, center.z, camera.up.x, camera.up.y, camera.up.z);
 
   // Redefinir a posição da luz para coordenadas de câmera
-  GLfloat light_position[] = {0.0, 0.0, 1.0, 0.0};
+  GLfloat light_position[] = {0.0, 0.0, 0.0, 1.0};
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-  GLfloat mat_shininess[] = {200.0}; // Aumentado para melhor reflexão
-  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+  // Desenha sol
+  drawSun();
 
-  for (Sphere planet : planets) {
+  // Desenha cada planeta
+  for (Planet &planet : planets) {
     glPushMatrix();
-    planet.draw();
+    Position pos = planet.model.getPosition();
+    glTranslatef(pos.x, pos.y, pos.z);
+    glRotatef(planet.rotate, 0.0f, 1.0f, 0.0f);
+    planet.model.draw();
     glPopMatrix();
+
+    // Atualiza translação do planeta para prox iteração
+    if (!pause) {
+      updatePlanet(planet);
+      updateRotate(planet);
+      planet.translation_value += 1.0;
+    }
   }
 }
 
@@ -130,7 +175,6 @@ void handleEvents(bool &running) {
       break;
 
     case SDL_MOUSEMOTION: {
-      // CORREÇÃO: Colocar o bloco do mouse motion entre chaves
       float xoffset = event.motion.xrel * camera.sensitivity;
       float yoffset = -event.motion.yrel * camera.sensitivity;
 
@@ -143,13 +187,15 @@ void handleEvents(bool &running) {
       if (camera.pitch < -89.0f)
         camera.pitch = -89.0f;
 
-      // ATUALIZAÇÃO CORRIGIDA: Chamar apenas updateCameraVectors()
       updateCameraVectors();
       break;
     }
 
+      // Eventos do teclado
     case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_ESCAPE)
+      if (event.key.keysym.sym == SDLK_p)
+        pause = !pause;
+      else if (event.key.keysym.sym == SDLK_ESCAPE)
         running = false;
       break;
     }
@@ -169,14 +215,9 @@ void moveCamera() {
   if (keystate[SDL_SCANCODE_D])
     camera.position += camera.right * velocity;
   if (keystate[SDL_SCANCODE_SPACE])
-    camera.position +=
-        camera.worldUp *
-        velocity; // Usar worldUp para movimento vertical consistente
+    camera.position += camera.worldUp * velocity;
   if (keystate[SDL_SCANCODE_LCTRL])
     camera.position -= camera.worldUp * velocity;
-
-  // ATUALIZAÇÃO OPCIONAL: Só é necessário se o movimento alterar a orientação
-  // updateCameraVectors(); // Removido - não é necessário após movimento puro
 }
 
 int main(int argc, char **argv) {
@@ -231,8 +272,34 @@ int main(int argc, char **argv) {
 
   init();
 
-  planets.push_back(Sphere(0.5, {0.0, 0.0, 0.0},
-                           "../assets/models/terra/EarthComposited_2k.png"));
+  sun = new Sphere(3.0, {-4.0, 0.0, 0.0}, "../assets/models/sol/2k_sun.jpeg");
+
+  // Definindo planetas
+  planets.push_back({Sphere(0.029, {4.0, 0.0, 0.0},
+                            "../assets/models/mercurio/2k_mercury.jpeg"),
+                     4.0, false, 0.027f, 0.0, 0});
+  planets.push_back({Sphere(0.07, {6.0, 0.0, 0.0},
+                            "../assets/models/venus/2k_venus_atmosphere.jpeg"),
+                     6.0, false, 0.020f, 0.0, 0});
+  planets.push_back({Sphere(0.075, {8.0, 0.0, 0.0},
+                            "../assets/models/terra/EarthComposited_2k.png"),
+                     8.0, false, 0.016f, 0.0, 0});
+  planets.push_back(
+      {Sphere(0.04, {11.0, 0.0, 0.0}, "../assets/models/marte/2k_mars.jpeg"),
+       11.0, false, 0.010f, 0});
+  planets.push_back({Sphere(0.85, {15.0, 0.0, 0.0},
+                            "../assets/models/jupiter/2k_jupiter.jpeg"),
+                     15.0, false, 0.008f, 0.0, 0});
+  planets.push_back(
+      {Sphere(0.7, {22.0, 0.0, 0.0}, "../assets/models/saturno/2k_saturn.jpeg"),
+       22.0, true, 0.005f, 0.0, 0});
+
+  planets.push_back(
+      {Sphere(0.3, {25.0, 0.0, 0.0}, "../assets/models/urano/2k_uranus.jpeg"),
+       25.0, false, 0.0025f, 0.0, 0});
+  planets.push_back(
+      {Sphere(0.3, {28.0, 0.0, 0.0}, "../assets/models/netuno/2k_neptune.jpeg"),
+       28.0, false, 0.001f, 0.0, 0});
 
   // Configura viewport inicial
   int w, h;

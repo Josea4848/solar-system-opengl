@@ -19,7 +19,9 @@ void Sphere::draw() {
 
   GLUquadric *quad = gluNewQuadric();
   gluQuadricTexture(quad, GL_TRUE);
+  gluQuadricNormals(quad, GLU_SMOOTH);
   glPushMatrix();
+  glScalef(-1.0f, 1.0f, 1.0f);
   glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
   gluSphere(quad, radius, 50, 50);
   gluDeleteQuadric(quad);

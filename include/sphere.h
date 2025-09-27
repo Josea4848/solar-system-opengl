@@ -3,6 +3,7 @@
 
 #include "texture.h"
 #include <GL/gl.h>
+#include <array>
 
 typedef struct Position {
   GLfloat x;
@@ -16,6 +17,8 @@ public:
   double getRadius();
   Position getPosition();
   void draw();
+
+  void setPos(Position new_pos);
   ~Sphere();
 
 private:

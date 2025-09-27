@@ -54,7 +54,7 @@ void updateRotate(Planet &planet) {
 }
 
 std::vector<Planet> planets;
-Sphere *sun;
+Sphere *sun, *skybox;
 SDL_Window *window = nullptr;
 SDL_GLContext glContext;
 Camera camera;
@@ -119,6 +119,8 @@ void display(void) {
   gluLookAt(camera.position.x, camera.position.y, camera.position.z, center.x,
             center.y, center.z, camera.up.x, camera.up.y, camera.up.z);
 
+  skybox->draw();
+
   // Redefinir a posição da luz para coordenadas de câmera
   GLfloat light_position[] = {0.0, 0.0, 0.0, 1.0};
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -148,8 +150,7 @@ void reshape(int w, int h) {
   glViewport(0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45.0, (GLfloat)w / (GLfloat)h, 0.1,
-                 200.0); // Campo de visão mais amplo
+  gluPerspective(45.0, (GLfloat)w / (GLfloat)h, 0.1, 2000.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
@@ -272,6 +273,11 @@ int main(int argc, char **argv) {
 
   init();
 
+  // Carregando skybox
+  skybox =
+      new Sphere(100.0, {0.0, 0.0, 0.0}, "../assets/models/skybox/skybox.jpeg");
+
+  // Definindo sol
   sun = new Sphere(3.0, {-4.0, 0.0, 0.0}, "../assets/models/sol/2k_sun.jpeg");
 
   // Definindo planetas

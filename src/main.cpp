@@ -192,7 +192,7 @@ void handleEvents(bool &running) {
       break;
     }
 
-      // Eventos do teclado
+    // Eventos do teclado
     case SDL_KEYDOWN:
       if (event.key.keysym.sym == SDLK_p)
         pause = !pause;
@@ -206,6 +206,11 @@ void handleEvents(bool &running) {
 void moveCamera() {
   const Uint8 *keystate = SDL_GetKeyboardState(NULL);
   float velocity = camera.speed;
+
+  if (keystate[SDL_SCANCODE_LSHIFT])
+    camera.speed = 0.025f; // velocidade padrão da câmera
+  else
+    camera.speed = 0.1f;
 
   if (keystate[SDL_SCANCODE_W])
     camera.position += camera.front * velocity;
@@ -262,8 +267,7 @@ int main(int argc, char **argv) {
 
   // Configuração inicial da câmera
   camera.position = glm::vec3(0.0f, 0.0f, 20.0f);
-  camera.worldUp = glm::vec3(0.0f, 1.0f, 0.0f); // Vetor up global de referência
-  camera.speed = 0.1f;
+  camera.worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
   camera.sensitivity = 0.1f;
   camera.yaw = -90.0f;
   camera.pitch = 0.0f;

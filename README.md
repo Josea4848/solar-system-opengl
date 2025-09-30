@@ -1,6 +1,6 @@
 # Solar System OpenGL
 
-![Solar System](https://i.imgur.com/2Rj5J0b.png)
+![Solar System](https://i.imgur.com/gtfkUqr.png)
 
 ## 📝 O que o código faz
 
@@ -93,4 +93,5 @@ Melhoria 5: Definir os anéis de Saturno como mini-esferas que orbitam o planeta
 [Carlos Rafael Torres Miranda Novack]: Definição dos planetas e suas texturas, definição da skybox, definição das rotações dos planetas.  
 
 [Emanuel Thadeu dos Santos Conrado]: Representação dos anéis de Saturno, definição das translações dos planetas.
+
 

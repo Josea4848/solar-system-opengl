@@ -7,13 +7,6 @@ void updatePlanet(Planet &planet) {
   double dt = planet.translation_value;
   t = dt * planet.translation_rate / 10;
 
-  planet.model.setPos(
+  planet.model->setPos(
       {(GLfloat)(R * cos(t)), (GLfloat)0.0f, (GLfloat)(R * sin(t))});
-}
-
-void updateRotate(Planet &planet) {
-  planet.rotate += 1.0f;
-  if (planet.rotate >= 360.0f) {
-    planet.rotate -= 360.0f;
-  }
 }

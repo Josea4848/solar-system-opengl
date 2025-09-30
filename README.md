@@ -1,6 +1,6 @@
 # Solar System OpenGL
 
-![Solar System](https://avatars.githubusercontent.com/u/116035045?v=4)
+![Solar System](https://i.imgur.com/2Rj5J0b.png)
 
 ## 📝 O que o código faz
 
@@ -33,7 +33,7 @@ Clone o repositório com:
 ```
 git clone https://github.com/Josea4848/solar-system-opengl.git
 ```
-Faça o make com:
+Dentro da pasta do repositório, faça o make com:
 ```
 mkdir build && cd build
 ```
@@ -51,17 +51,18 @@ Após compilar, dentro da pasta build, execute no terminal:
 
 ## 🎮 Controles da câmera e simulação
 
-| Tecla               | Ação                          |
-| ------------------- | ----------------------------- |
-| **W**               | Mover câmera para frente      |
-| **S**               | Mover câmera para trás        |
-| **A**               | Mover câmera para a esquerda  |
-| **D**               | Mover câmera para a direita   |
-| **ESPAÇO**          | Mover câmera para cima        |
-| **CTRL (esquerdo)** | Mover câmera para baixo       |
-| **P**               | Pausar/retomar simulação      |
-| **ESC**             | Encerrar o programa           |
-| **Mouse**           | Controlar a direção da câmera |
+| Tecla               | Ação                           |
+| ------------------- | ------------------------------ |
+| **W**               | Mover câmera para frente       |
+| **S**               | Mover câmera para trás         |
+| **A**               | Mover câmera para a esquerda   |
+| **D**               | Mover câmera para a direita    |
+| **ESPAÇO**          | Mover câmera para cima         |
+| **CTRL (esquerdo)** | Mover câmera para baixo        |
+| **SHIFT (esquerdo)<br>(segurar)**| Diminuir a velocidade da câmera|
+| **P**               | Pausar/retomar simulação       |
+| **ESC**             | Encerrar o programa            |
+| **Mouse**           | Controlar a direção da câmera  |
 
 ## 🚨 Principais problemas encontrados
 
@@ -81,9 +82,9 @@ Melhoria 2: Adição das principais luas do sistema solar.
 
 Melhoria 3: Mudança da órbita dos planetas em relação ao Sol para uma elipse.
 
-Melhoria 4: Definir uma escala de velocidade para a rotação e translação dos planetas para maior fidelidade.
+Melhoria 4: Definir uma escala de velocidade para a rotação e translação diferente para cada planeta.
 
-Melhoria 5: Mudança na forma de fazer os anéis de Saturno.
+Melhoria 5: Definir os anéis de Saturno como mini-esferas que orbitam o planeta.
 
 ## 👥 O que cada integrante fez
 
@@ -92,3 +93,4 @@ Melhoria 5: Mudança na forma de fazer os anéis de Saturno.
 [Carlos Rafael Torres Miranda Novack]: Definição dos planetas e suas texturas, definição da skybox, definição das rotações dos planetas.  
 
 [Emanuel Thadeu dos Santos Conrado]: Representação dos anéis de Saturno, definição das translações dos planetas.
+

@@ -24,16 +24,16 @@ sudo apt install freeglut3-dev # OpenGL
 sudo apt install libsdl2-dev # SDL2
 ```
 ```
-sudo apt install libglm-dev #GLM
+sudo apt install libglm-dev # GLM
 ```
 
-### Compilando o programa:  
-Clone o repositório com
+### Compilando o programa  
+Clone o repositório com:
 
 ```
 git clone https://github.com/Josea4848/solar-system-opengl.git
 ```
-Faça o make com
+Faça o make com:
 ```
 mkdir build && cd build
 ```
@@ -43,7 +43,7 @@ cmake ..
 ```
 make
 ```
-### Executando o programa:
+### Executando o programa
 Após compilar, dentro da pasta build, execute no terminal:
 ```
 ./solar
@@ -81,7 +81,9 @@ Melhoria 2: Adição das principais luas do sistema solar.
 
 Melhoria 3: Mudança da órbita dos planetas em relação ao Sol para uma elipse.
 
-Melhoria 4: Definir uma escala de velocidade para a rotação e translação dos planetas.
+Melhoria 4: Definir uma escala de velocidade para a rotação e translação dos planetas para maior fidelidade.
+
+Melhoria 5: Mudança na forma de fazer os anéis de Saturno.
 
 ## 👥 O que cada integrante fez
 

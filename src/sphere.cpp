@@ -53,7 +53,8 @@ void Sphere::draw() {
 
   // Rotação, por conta da textura
   glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-
+  
+  // As retas y e z estão invertidas por conta da rotação de textura
   glRotatef(this->pitch, 1.0f, 0.0f, 0.0f); // pitch
   glRotatef(this->yaw, 0.0f, 0.0f, 1.0f);   // yaw
   glRotatef(this->roll, 0.0f, 1.0f, 0.0f);  // roll
@@ -64,8 +65,8 @@ void Sphere::draw() {
   glDisable(GL_TEXTURE_2D);
 }
 
-Sphere::~Sphere() {}
 
+// Aplica rotação no modelo
 void Sphere::rotate(float pitch, float yaw, float roll) {
   this->pitch += pitch;
   if (this->pitch > 360.0)
@@ -79,3 +80,6 @@ void Sphere::rotate(float pitch, float yaw, float roll) {
   if (this->roll > 360.0)
     this->roll = 0.0;
 }
+
+Sphere::~Sphere() {}
+

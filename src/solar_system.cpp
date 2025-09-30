@@ -1,6 +1,7 @@
 #include "../include/solar_system.h"
 #include <glm/geometric.hpp>
 
+// Calcula posição com base em equação de circuferêncioa
 void updatePlanet(Planet &planet) {
   static GLfloat t = 0.0;
   double R = planet.distance;

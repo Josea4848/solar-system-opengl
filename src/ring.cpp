@@ -61,8 +61,18 @@ void Ring::draw() {
 }
 
 void Ring::setPosition(glm::vec3 new_pos) { this->position = new_pos; }
+
+// Aplica rotação no modelo
 void Ring::rotate(float pitch, float yaw, float roll) {
   this->pitch += pitch;
+  if (this->pitch > 360.0)
+    this->pitch = 0.0;
+
   this->yaw += yaw;
+  if (this->yaw > 360.0)
+    this->yaw = 0.0;
+
   this->roll += roll;
+  if (this->roll > 360.0)
+    this->roll = 0.0;
 }

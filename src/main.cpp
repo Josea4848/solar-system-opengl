@@ -71,16 +71,22 @@ void display(void) {
   // Desenha cada planeta
   for (Planet &planet : planets) {
     glPushMatrix();
-    Position pos = planet.model.getPosition();
+    glm::vec3 pos = planet.model->getPosition();
     glTranslatef(pos.x, pos.y, pos.z);
-    glRotatef(planet.rotate, 0.0f, 1.0f, 0.0f);
-    planet.model.draw();
+    planet.model->draw();
     glPopMatrix();
+
+    // Se o planeta possuir anel
+    if (planet.ring != nullptr) {
+      planet.ring->setPosition(planet.model->getPosition());
+      planet.ring->rotate(0, pause ? 0.0f : 1.0f, 0.0);
+      planet.ring->draw();
+    }
 
     // Atualiza translação do planeta para prox iteração
     if (!pause) {
       updatePlanet(planet);
-      updateRotate(planet);
+      planet.model->rotate(0.0f, planet.rotate_rate, 0.0f);
       planet.translation_value += 1.0;
     }
   }
@@ -95,6 +101,7 @@ void reshape(int w, int h) {
   glLoadIdentity();
 }
 
+// Gerencia eventos do teclado e mouse
 void handleEvents(bool &running) {
   SDL_Event event;
 
@@ -135,6 +142,7 @@ void handleEvents(bool &running) {
   }
 }
 
+// Associa eventos do teclado para manipular a câmera
 void moveCamera() {
   const Uint8 *keystate = SDL_GetKeyboardState(NULL);
   float velocity = camera->getSpeed();
@@ -172,31 +180,42 @@ void loadPlanets() {
                    emission);
 
   // Definindo planetas
-  planets.push_back({Sphere(0.029, {4.0, 0.0, 0.0},
-                            "../assets/models/mercurio/2k_mercury.jpeg"),
-                     4.0, false, 0.027f, 0.0, 0});
-  planets.push_back({Sphere(0.07, {6.0, 0.0, 0.0},
-                            "../assets/models/venus/2k_venus_atmosphere.jpeg"),
-                     6.0, false, 0.020f, 0.0, 0});
-  planets.push_back({Sphere(0.075, {8.0, 0.0, 0.0},
-                            "../assets/models/terra/EarthComposited_2k.png"),
-                     8.0, false, 0.016f, 0.0, 0});
-  planets.push_back(
-      {Sphere(0.04, {11.0, 0.0, 0.0}, "../assets/models/marte/2k_mars.jpeg"),
-       11.0, false, 0.010f, 0});
-  planets.push_back({Sphere(0.85, {15.0, 0.0, 0.0},
-                            "../assets/models/jupiter/2k_jupiter.jpeg"),
-                     15.0, false, 0.008f, 0.0, 0});
-  planets.push_back(
-      {Sphere(0.7, {22.0, 0.0, 0.0}, "../assets/models/saturno/2k_saturn.jpeg"),
-       22.0, true, 0.005f, 0.0, 0});
+  planets.push_back({new Sphere(0.029, {4.0, 0.0, 0.0},
+                                "../assets/models/mercurio/2k_mercury.jpeg"),
+                     nullptr, 4.0f, 0.027f, 0.0f, 1});
 
   planets.push_back(
-      {Sphere(0.3, {25.0, 0.0, 0.0}, "../assets/models/urano/2k_uranus.jpeg"),
-       25.0, false, 0.0025f, 0.0, 0});
+      {new Sphere(0.07, {6.0, 0.0, 0.0},
+                  "../assets/models/venus/2k_venus_atmosphere.jpeg"),
+       nullptr, 6.0f, 0.020f, 0.0f, 1});
+
   planets.push_back(
-      {Sphere(0.3, {28.0, 0.0, 0.0}, "../assets/models/netuno/2k_neptune.jpeg"),
-       28.0, false, 0.001f, 0.0, 0});
+      {new Sphere(0.075, {8.0, 0.0, 0.0},
+                  "../assets/models/terra/EarthComposited_2k.png"),
+       nullptr, 8.0f, 0.016f, 0.0f, 1});
+
+  planets.push_back({new Sphere(0.04, {11.0, 0.0, 0.0},
+                                "../assets/models/marte/2k_mars.jpeg"),
+                     nullptr, 11.0f, 0.010f, 0.0f, 1});
+
+  planets.push_back({new Sphere(0.85, {15.0, 0.0, 0.0},
+                                "../assets/models/jupiter/2k_jupiter.jpeg"),
+                     nullptr, 15.0f, 0.008f, 0.0f, 1});
+
+  planets.push_back(
+      {new Sphere(0.7, {22.0, 0.0, 0.0}, -20.0, 0.0, 0.0,
+                  "../assets/models/saturno/2k_saturn.jpeg"),
+       new Ring(1.5, 1.8, 200, -20.0, 0.0, 0.0,
+                "../assets/models/saturno/2k_saturn_ring_alpha.png"),
+       22.0f, 0.005f, 0.0f, 1});
+
+  planets.push_back({new Sphere(0.3, {25.0, 0.0, 0.0},
+                                "../assets/models/urano/2k_uranus.jpeg"),
+                     nullptr, 25.0f, 0.0025f, 0.0f, 1});
+
+  planets.push_back({new Sphere(0.3, {28.0, 0.0, 0.0},
+                                "../assets/models/netuno/2k_neptune.jpeg"),
+                     nullptr, 28.0f, 0.001f, 0.0f, 1});
 }
 
 int main(int argc, char **argv) {

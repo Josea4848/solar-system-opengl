@@ -44,6 +44,9 @@ set(SOURCES
     src/main.cpp
     src/texture.cpp
     src/sphere.cpp
+    src/solar_system.cpp
+    src/camera.cpp
+    src/ring.cpp
 )
 
 # Definir arquivos header
@@ -51,6 +54,9 @@ set(HEADERS
     include/texture.h
     include/sphere.h
     include/stb_image.h
+    include/solar_system.h 
+    include/camera.h
+    include/ring.h
 )
 
 # Criar executável

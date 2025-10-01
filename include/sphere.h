@@ -2,29 +2,36 @@
 #define SPHERE_H
 
 #include "texture.h"
+#include <GL/freeglut_std.h>
 #include <GL/gl.h>
 #include <array>
-
-typedef struct Position {
-  GLfloat x;
-  GLfloat y;
-  GLfloat z;
-} Position;
+#include <glm/glm.hpp>
 
 class Sphere {
 public:
-  Sphere(double radius, Position pos, const char *texture_path);
+  Sphere(double radius, glm::vec3 pos, const char *texture_path);
+  Sphere(double radius, glm::vec3 pos, float pitch, float yaw, float roll,
+         const char *texture_path);
+  Sphere(double radius, glm::vec3 pos, const char *texture_path,
+         GLfloat emission[4]);
   double getRadius();
-  Position getPosition();
-  void draw();
+  glm::vec3 getPosition();
 
-  void setPos(Position new_pos);
+  void draw();
+  void setPos(glm::vec3 new_pos);
+
+  void rotate(float pitch, float yaw, float roll);
+
   ~Sphere();
 
 private:
   double radius;
-  Position pos;
+  glm::vec3 pos;
   GLuint texture_id;
+  GLfloat emission[4];
+  float pitch;
+  float yaw;
+  float roll;
 };
 
 #endif
